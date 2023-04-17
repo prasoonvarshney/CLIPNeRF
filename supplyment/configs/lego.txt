@@ -2,6 +2,8 @@ expname = blender_paper_lego
 basedir = ./logs
 datadir = ./data/nerf_synthetic/lego
 dataset_type = blender
+ft_path = ./checkpoint/lego_test/200000.tar
+description = "A green excavator"
 
 no_batching = True
 

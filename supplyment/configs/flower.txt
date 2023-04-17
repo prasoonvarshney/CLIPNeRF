@@ -2,6 +2,7 @@ expname = flower_test
 basedir = ./logs
 datadir = ./data/nerf_llff_data/flower
 dataset_type = llff
+ft_path = ./checkpoint/flower_test/100000.tar
 
 factor = 8
 llffhold = 8

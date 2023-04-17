@@ -6,4 +6,5 @@ matplotlib
 configargparse
 tensorboard>=2.0
 tqdm
+kornia
 opencv-python

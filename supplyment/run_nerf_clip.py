@@ -558,13 +558,13 @@ def config_parser():
     # logging/saving options
     parser.add_argument("--i_print",   type=int, default=200,
                         help='frequency of console printout and metric loggin')
-    parser.add_argument("--i_img",     type=int, default=200,
+    parser.add_argument("--i_img",     type=int, default=2000,
                         help='frequency of tensorboard image logging')
-    parser.add_argument("--i_weights", type=int, default=200,
+    parser.add_argument("--i_weights", type=int, default=2000,
                         help='frequency of weight ckpt saving')
-    parser.add_argument("--i_testset", type=int, default=200,
+    parser.add_argument("--i_testset", type=int, default=2000,
                         help='frequency of testset saving')
-    parser.add_argument("--i_video",   type=int, default=200,
+    parser.add_argument("--i_video",   type=int, default=2000,
                         help='frequency of render_poses video saving')
     # clip constrain
     parser.add_argument("--description", type=str, default="A green excavator", help="the text that guides the editing/generation (Or: A photo of a XXX excavator)")
@@ -805,9 +805,9 @@ def train():
         rgb_img = rgb.view(sample_scale, sample_scale, -1)
         target = target_s.view(sample_scale, sample_scale, -1)
         rgb_img = rgb_img.permute(2,0,1).unsqueeze(0)
-        rgb_img_gray = kornia.rgb_to_grayscale(rgb_img)
+        rgb_img_gray = kornia.color.rgb_to_grayscale(rgb_img)
         target_img = target.permute(2,0,1).unsqueeze(0)
-        target_img_gray = kornia.rgb_to_grayscale(target_img)
+        target_img_gray = kornia.color.rgb_to_grayscale(target_img)
 
         optimizer.zero_grad()
 
@@ -818,11 +818,12 @@ def train():
         if 'rgb0' in extras:
             rgb0_img = extras['rgb0'].view(sample_scale, sample_scale, -1)
             rgb0_img = rgb0_img.permute(2,0,1).unsqueeze(0)
-            rgb0_img_gray = kornia.rgb_to_grayscale(rgb0_img)
+            rgb0_img_gray = kornia.color.rgb_to_grayscale(rgb0_img)
             img_loss0 = img2mse(rgb0_img_gray, target_img_gray)
             loss = loss + img_loss0
 
         if args.use_clip:
+            # print(f"DEBUG: Optimizing with CLIP loss for description {args.description} and weight {args.w_clip}")
             gen_img = rgb_img
             c_loss = clip_loss(gen_img, text_inputs)
             loss = loss + c_loss * args.w_clip
